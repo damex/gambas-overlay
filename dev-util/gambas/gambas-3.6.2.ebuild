@@ -15,14 +15,15 @@ SRC_URI="mirror://sourceforge/${PN}/${MY_PN}-${PV}.tar.bz2"
 LICENSE="GPL2"
 KEYWORDS="*"
 
-IUSE="+libxml +curl +gmp +net +qt4 +x11 +xml
-	bzip2 cairo crypt curl dbus examples gmp gnome gsl gtk2 gtk3 httpd imageimlib imageio jit libxml media mime
-	mysql ncurses odbc openal opengl openssl pcre pdf postgres qt4 sdl sdl-sound sqlite v4l xml zlib"
+IUSE="+curl +net +qt4 +x11
+	bzip2 cairo crypt dbus examples gmp gnome gsl gtk2 gtk3 httpd imageimlib imageio jit libxml media mime
+	mysql ncurses odbc openal opengl openssl pcre pdf pop3 postgres sdl sdl-sound sqlite v4l xml zlib"
 
 REQUIRED_USE="gnome? ( x11 )
 	gtk2? ( x11 )
 	gtk3? ( x11 )
-	net? ( curl )
+	net? ( curl
+		pop3? ( mime ) )
 	pdf? ( || ( gtk2 gtk3 qt4 sdl ) )
 	qt4? ( x11 )
 	sdl? ( x11 )
@@ -163,11 +164,32 @@ src_configure() {
 		$(use_enable sdl-sound sdlsound) \
 		$(use_enable sqlite sqlite3) \
 		$(use_enable v4l) \
+		$(use_enable x11) \
 		$(use_enable xml) \
-		$(use_enable zlib) \
-		$(use_enable x11)
+		$(use_enable zlib)
 }
 
 src_install() {
 	emake DESTDIR="${D}" install -j1
+
+	dodoc AUTHORS ChangeLog NEWS README
+
+	if use net ; then
+		newdoc gb.net/src/doc/README gb.net-README
+		newdoc gb.net/src/doc/changes.txt gb.net-ChangeLog
+	fi
+
+	if use pcre ; then
+		newdoc gb.pcre/src/README gb.pcre-README
+	fi
+
+	if use gtk2 || use gtk3 || use qt4 ; then
+		doicon -s 128 app/src/${MY_PN}/img/logo/logo.png
+		make_desktop_entry "${MY_PN}" "Gambas" "Development"
+
+		insinto /usr/share/icons/hicolor/64x64/mimetypes
+		doins app/mime/application-x-gambasscript.png app/mime/application-x-gambasserverpage.png main/mime/application-x-gambas3.png
+		insinto /usr/share/mime/application
+		doins app/mime/application-x-gambasscript.xml app/mime/application-x-gambasserverpage.xml main/mime/application-x-gambas3.xml
+	fi
 }
