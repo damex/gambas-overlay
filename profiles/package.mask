@@ -1,0 +1,1 @@
+# do not let people accidentally install live ebuilds
