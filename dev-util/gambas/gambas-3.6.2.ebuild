@@ -16,8 +16,8 @@ LICENSE="GPL2"
 KEYWORDS="*"
 
 IUSE="+gtk2
-	bzip2 curl dbus examples gtk2 gtk3 libxml mysql ncurses odbc opengl openssl pcre pdf postgres qt4 sdl sdl-sound sqlite xml zlib
-	net mime v4l crypt x11 keyring cairo imageio imageimlib gsl gmp media jit httpd openal"
+	bzip2 curl dbus examples gsl gtk2 gtk3 httpd libxml mysql ncurses odbc opengl openssl pcre pdf postgres qt4 sdl sdl-sound sqlite xml zlib
+	net mime v4l crypt x11 keyring cairo imageio imageimlib gmp media jit openal"
 
 REQUIRED_USE="pdf? ( || ( gtk2 gtk3 sdl ) )
 	sdl-sound? ( sdl )"
@@ -25,6 +25,7 @@ REQUIRED_USE="pdf? ( || ( gtk2 gtk3 sdl ) )
 RDEPEND="bzip2? ( app-arch/bzip2 )
 	curl? ( net-misc/curl )
 	dbus? ( sys-apps/dbus )
+	gsl? ( sci-libs/gsl )
 	gtk2? ( x11-libs/gtk+:2 )
 	gtk3? ( x11-libs/gtk+:3 )
 	libxml? ( dev-libs/libxml2 )
@@ -39,6 +40,8 @@ RDEPEND="bzip2? ( app-arch/bzip2 )
 	qt4? ( dev-qt/qtgui:4 )
 	sdl? ( media-libs/libsdl-image )
 	sdl-sound? ( media-libs/sdl-mixer )
+	v4l? ( media-libs/jpeg
+		media-libs/libpng )
 	xml? ( dev-libs/libxml2
 		dev-libs/libxslt )
 	zlib? ( sys-libs/zlib )"
@@ -62,6 +65,7 @@ src_prepare() {
 	use_if_iuse curl || autocrap_cleanup curl
 	use_if_iuse dbus || autocrap_cleanup dbus
 	use_if_iuse examples || autocrap_cleanup examples
+	use_if_iuse gsl || autocrap_cleanup gsl
 	use_if_iuse gtk2 || autocrap_cleanup gtk
 	use_if_iuse gtk3 || autocrap_cleanup gtk3
 	use_if_iuse libxml || autocrap_cleanup libxml
@@ -77,6 +81,7 @@ src_prepare() {
 	use_if_iuse sdl || autocrap_cleanup sdl
 	use_if_iuse sdl-sound || autocrap_cleanup sdlsound
 	use_if_iuse sqlite || autocrap_cleanup sqlite
+	use_if_iuse v4l || autocrap_cleanup v4l
 	use_if_iuse xml || autocrap_cleanup xml
 	use_if_iuse zlib || autocrap_cleanup zlib
 
@@ -92,8 +97,10 @@ src_configure() {
 		$(use_enable curl) \
 		$(use_enable dbus) \
 		$(use_enable examples) \
+		$(use_enable gsl) \
 		$(use_enable gtk2) \
 		$(use_enable gtk3) \
+		$(use_enable httpd) \
 		$(use_enable libxml) \
 		$(use_enable mysql) \
 		$(use_enable ncurses) \
@@ -107,22 +114,20 @@ src_configure() {
 		$(use_enable sdl) \
 		$(use_enable sdl-sound sdlsound) \
 		$(use_enable sqlite sqlite3) \
+		$(use_enable v4l) \
 		$(use_enable xml) \
 		$(use_enable zlib) \
 		$(use_enable net) \
 		$(use_enable mime) \
-		$(use_enable v4l) \
 		$(use_enable crypt) \
 		$(use_enable x11) \
 		$(use_enable keyring) \
 		$(use_enable cairo) \
 		$(use_enable imageio) \
 		$(use_enable imageimlib) \
-		$(use_enable gsl) \
 		$(use_enable gmp) \
 		$(use_enable media) \
 		$(use_enable jit) \
-		$(use_enable httpd) \
 		$(use_enable openal)
 }
 
