@@ -7,7 +7,7 @@ inherit autotools eutils
 SLOT="3"
 MY_PN="${PN}${SLOT}"
 
-DESCRIPTION=""
+DESCRIPTION="Gambas is a free development environment based on a Basic interpreter with object extensions"
 HOMEPAGE="http://gambas.sourceforge.net"
 
 SRC_URI="mirror://sourceforge/${PN}/${MY_PN}-${PV}.tar.bz2"
@@ -42,7 +42,7 @@ src_configure() {
 		$(use_enable sqlite2)
 		$(use_enable sqlite3)
 		$(use_enable net)
-		$(use_enable enable-curl)
+		$(use_enable curl)
 		$(use_enable mime)
 		$(use_enable pcre)
 		$(use_enable sdl)
