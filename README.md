@@ -1,4 +1,4 @@
-funtoo-deadbeef
+funtoo-gambas
 ===============
  
 The `funtoo-gambas` overlay is designed to be used with `Funtoo Linux`, however, ebuilds from this overlay can be used on any modern Gentoo Linux based derivative.
