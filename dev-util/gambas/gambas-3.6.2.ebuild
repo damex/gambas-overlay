@@ -2,7 +2,7 @@
 
 EAPI="5"
 
-inherit autotools eutils
+inherit autotools eutils fdo-mime
 
 SLOT="3"
 MY_PN="${PN}${SLOT}"
@@ -184,12 +184,26 @@ src_install() {
 	fi
 
 	if use gtk2 || use gtk3 || use qt4 ; then
-		doicon -s 128 app/src/${MY_PN}/img/logo/logo.png
+		newicon -s 128 app/src/${MY_PN}/img/logo/logo.png ${MY_PN}.png
 		make_desktop_entry "${MY_PN}" "Gambas" "Development"
 
-		insinto /usr/share/icons/hicolor/64x64/mimetypes
-		doins app/mime/application-x-gambasscript.png app/mime/application-x-gambasserverpage.png main/mime/application-x-gambas3.png
+		doicon -s 64 -c mimetypes app/mime/application-x-gambasscript.png \
+			app/mime/application-x-gambasserverpage.png \
+			main/mime/application-x-gambas3.png
+
 		insinto /usr/share/mime/application
-		doins app/mime/application-x-gambasscript.xml app/mime/application-x-gambasserverpage.xml main/mime/application-x-gambas3.xml
+		doins app/mime/application-x-gambasscript.xml \
+			app/mime/application-x-gambasserverpage.xml \
+			main/mime/application-x-gambas3.xml
 	fi
+}
+
+pkg_postinst() {
+	fdo-mime_desktop_database_update
+	fdo-mime_mime_database_update
+}
+
+pkg_postrm() {
+	fdo-mime_desktop_database_update
+	fdo-mime_mime_database_update
 }
