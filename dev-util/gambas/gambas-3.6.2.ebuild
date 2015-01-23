@@ -184,8 +184,8 @@ src_install() {
 	fi
 
 	if use gtk2 || use gtk3 || use qt4 ; then
-		newicon -s 128 app/src/${MY_PN}/img/logo/logo.png ${MY_PN}.png
-		make_desktop_entry "${MY_PN}" "Gambas" "Development"
+		newicon -s 128 -c apps -t hicolor app/src/${MY_PN}/img/logo/logo.png ${PN}.png
+		make_desktop_entry "${MY_PN}" "Gambas" "/usr/share/icons/hicolor/128x128/apps/${PN}.png" "Development"
 
 		doicon -s 64 -c mimetypes app/mime/application-x-gambasscript.png \
 			app/mime/application-x-gambasserverpage.png \
