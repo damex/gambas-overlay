@@ -138,8 +138,7 @@ src_prepare() {
 }
 
 src_configure() {
-	econf --config-cache \
-		$(use_enable bzip2 bzlib2) \
+	econf $(use_enable bzip2 bzlib2) \
 		$(use_enable cairo) \
 		$(use_enable crypt) \
 		$(use_enable curl) \
@@ -216,6 +215,7 @@ pkg_preinst() {
 pkg_postinst() {
 	fdo-mime_desktop_database_update
 	fdo-mime_mime_database_update
+
 	if use qt4 ; then
 		gnome2_icon_cache_update
 	fi
@@ -224,6 +224,7 @@ pkg_postinst() {
 pkg_postrm() {
 	fdo-mime_desktop_database_update
 	fdo-mime_mime_database_update
+
 	if use qt4 ; then
 		gnome2_icon_cache_update
 	fi
