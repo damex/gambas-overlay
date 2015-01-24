@@ -2,7 +2,7 @@
 
 EAPI="5"
 
-inherit autotools eutils fdo-mime
+inherit autotools eutils fdo-mime gnome2-utils
 
 SLOT="3"
 MY_PN="${PN}${SLOT}"
@@ -20,7 +20,7 @@ IUSE="+curl +net +qt4 +x11
 	mysql ncurses odbc openal opengl openssl pcre pdf pop3 postgres qt4 sdl sdl-sound sqlite v4l xml zlib"
 
 # gambas3 have the only one gui. it is based on qt4.
-# this use flags (modules/plugins) require that qt4 gui has to be present at the system to be properly used:
+# these use flags (modules/plugins) require that qt4 gui has to be present at the system to be properly used:
 # cairo gnome gstreamer gtk2 gtk3 opengl pdf sdl v4l
 
 REQUIRED_USE="cairo? ( qt4 x11 )
@@ -44,8 +44,8 @@ RDEPEND="bzip2? ( app-arch/bzip2 )
 	gnome? ( gnome-base/gnome-keyring )
 	gmp? ( dev-libs/gmp )
 	gsl? ( sci-libs/gsl )
-	gstreamer? ( media-libs/gstreamer
-		media-libs/gst-plugins-base )
+	gstreamer? ( media-libs/gst-plugins-base
+		media-libs/gstreamer )
 	gtk2? ( x11-libs/gtk+:2 )
 	gtk3? ( x11-libs/gtk+:3 )
 	jit? ( sys-devel/llvm )
@@ -207,12 +207,24 @@ src_install() {
 	fi
 }
 
+pkg_preinst() {
+	if use qt4 ; then
+		gnome2_icon_savelist
+	fi
+}
+
 pkg_postinst() {
 	fdo-mime_desktop_database_update
 	fdo-mime_mime_database_update
+	if use qt4 ; then
+		gnome2_icon_cache_update
+	fi
 }
 
 pkg_postrm() {
 	fdo-mime_desktop_database_update
 	fdo-mime_mime_database_update
+	if use qt4 ; then
+		gnome2_icon_cache_update
+	fi
 }
