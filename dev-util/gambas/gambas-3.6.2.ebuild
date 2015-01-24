@@ -16,18 +16,26 @@ LICENSE="GPL2"
 KEYWORDS="*"
 
 IUSE="+curl +net +qt4 +x11
-	bzip2 cairo crypt dbus examples gmp gnome gsl gtk2 gtk3 httpd imageimlib imageio jit libxml media mime
-	mysql ncurses odbc openal opengl openssl pcre pdf pop3 postgres sdl sdl-sound sqlite v4l xml zlib"
+	bzip2 cairo crypt dbus examples gmp gnome gsl gstreamer gtk2 gtk3 httpd imageimlib imageio jit libxml mime
+	mysql ncurses odbc openal opengl openssl pcre pdf pop3 postgres qt4 sdl sdl-sound sqlite v4l xml zlib"
 
-REQUIRED_USE="gnome? ( x11 )
-	gtk2? ( x11 )
-	gtk3? ( x11 )
+# gambas3 have the only one gui. it is based on qt4.
+# this use flags (modules/plugins) require that qt4 gui has to be present at the system to be properly used:
+# cairo gnome gstreamer gtk2 gtk3 opengl pdf sdl v4l
+
+REQUIRED_USE="cairo? ( qt4 x11 )
+	gnome? ( qt4 x11 )
+	gstreamer? ( qt4 x11 )
+	gtk2? ( qt4 x11 )
+	gtk3? ( qt4 x11 )
 	net? ( curl
 		pop3? ( mime ) )
-	pdf? ( || ( gtk2 gtk3 qt4 sdl ) )
+	opengl? ( qt4 x11 )
+	pdf? ( qt4 x11 )
 	qt4? ( x11 )
-	sdl? ( x11 )
-	sdl-sound? ( sdl )"
+	sdl? ( qt4 x11 )
+	sdl-sound? ( sdl )
+	v4l? ( qt4 x11 )"
 
 RDEPEND="bzip2? ( app-arch/bzip2 )
 	cairo? ( x11-libs/cairo )
@@ -36,6 +44,8 @@ RDEPEND="bzip2? ( app-arch/bzip2 )
 	gnome? ( gnome-base/gnome-keyring )
 	gmp? ( dev-libs/gmp )
 	gsl? ( sci-libs/gsl )
+	gstreamer? ( media-libs/gstreamer
+		media-libs/gst-plugins-base )
 	gtk2? ( x11-libs/gtk+:2 )
 	gtk3? ( x11-libs/gtk+:3 )
 	jit? ( sys-devel/llvm )
@@ -43,8 +53,6 @@ RDEPEND="bzip2? ( app-arch/bzip2 )
 	imageio? ( dev-libs/glib
 		x11-libs/gdk-pixbuf )
 	libxml? ( dev-libs/libxml2 )
-	media? ( media-libs/gstreamer
-		media-libs/gst-plugins-base )
 	mime? ( dev-libs/gmime )
 	mysql?  ( virtual/mysql )
 	ncurses? ( sys-libs/ncurses )
@@ -75,16 +83,16 @@ DEPEND="${RDEPEND}
 S="${WORKDIR}/${MY_PN}-${PV}"
 
 autocrap_cleanup() {
-	sed -i -e "/^\(AC\|GB\)_CONFIG_SUBDIRS(${1}[,)]/d" \
-		"${S}/configure.ac" || die
-	sed -i -e "/^ \(@${1}_dir@\|${1}\)/d" \
-		"${S}/Makefile.am" || die
+	sed -e "/^\(AC\|GB\)_CONFIG_SUBDIRS(${1}[,)]/d" \
+		-i "${S}/configure.ac" || die
+	sed -e "/^ \(@${1}_dir@\|${1}\)/d" \
+		-i "${S}/Makefile.am" || die
 }
 
 src_prepare() {
 	# funtoo-ism
-	epatch "${FILESDIR}/gambas-3.6.2-app-makefile.am.patch"
-	epatch "${FILESDIR}/gambas-3.6.2-main-makefile.am.patch"
+	epatch "${FILESDIR}/${P}-app-makefile.am.patch"
+	epatch "${FILESDIR}/${P}-main-makefile.am.patch"
 
 	# deprecated
 	autocrap_cleanup sqlite2
@@ -98,6 +106,7 @@ src_prepare() {
 	use_if_iuse gsl || autocrap_cleanup gsl
 	use_if_iuse gmp || autocrap_cleanup gmp
 	use_if_iuse gnome || autocrap_cleanup keyring
+	use_if_iuse gstreamer || autocrap_cleanup media
 	use_if_iuse gtk2 || autocrap_cleanup gtk
 	use_if_iuse gtk3 || autocrap_cleanup gtk3
 	use_if_iuse httpd || autocrap_cleanup httpd
@@ -105,7 +114,6 @@ src_prepare() {
 	use_if_iuse imageio || autocrap_cleanup imageio
 	use_if_iuse jit || autocrap_cleanup jit
 	use_if_iuse libxml || autocrap_cleanup libxml
-	use_if_iuse media || autocrap_cleanup media
 	use_if_iuse mime || autocrap_cleanup mime
 	use_if_iuse mysql || autocrap_cleanup mysql
 	use_if_iuse ncurses || autocrap_cleanup ncurses
@@ -140,6 +148,7 @@ src_configure() {
 		$(use_enable gmp) \
 		$(use_enable gnome keyring) \
 		$(use_enable gsl) \
+		$(use_enable gstreamer media) \
 		$(use_enable gtk2) \
 		$(use_enable gtk3) \
 		$(use_enable httpd) \
@@ -147,7 +156,6 @@ src_configure() {
 		$(use_enable imageio) \
 		$(use_enable jit) \
 		$(use_enable libxml) \
-		$(use_enable media) \
 		$(use_enable mime) \
 		$(use_enable mysql) \
 		$(use_enable ncurses) \
@@ -183,18 +191,19 @@ src_install() {
 		newdoc gb.pcre/src/README gb.pcre-README
 	fi
 
-	if use gtk2 || use gtk3 || use qt4 ; then
-		newicon -s 128 -c apps -t hicolor app/src/${MY_PN}/img/logo/logo.png ${PN}.png
-		make_desktop_entry "${MY_PN}" "Gambas" "/usr/share/icons/hicolor/128x128/apps/${PN}.png" "Development"
+	if use qt4 ; then
+		doicon "${S}/app/desktop/${MY_PN}.svg"
+		domenu "${S}/app/desktop/${MY_PN}.desktop"
 
-		doicon -s 64 -c mimetypes app/mime/application-x-gambasscript.png \
-			app/mime/application-x-gambasserverpage.png \
-			main/mime/application-x-gambas3.png
+		doicon -s 64 -c mimetypes \
+			"${S}/app/mime/application-x-gambasscript.png" \
+			"${S}/app/mime/application-x-gambasserverpage.png" \
+			"${S}/main/mime/application-x-gambas3.png"
 
 		insinto /usr/share/mime/application
-		doins app/mime/application-x-gambasscript.xml \
-			app/mime/application-x-gambasserverpage.xml \
-			main/mime/application-x-gambas3.xml
+		doins "${S}/app/mime/application-x-gambasscript.xml" \
+			"${S}/app/mime/application-x-gambasserverpage.xml" \
+			"${S}/main/mime/application-x-gambas3.xml"
 	fi
 }
 
