@@ -20,14 +20,16 @@ IUSE="+curl +net +qt4 +x11
 	mysql ncurses odbc openal opengl openssl pcre pdf pop3 postgres qt4 sdl sdl-sound sqlite v4l xml zlib"
 
 # gambas3 have the only one gui. it is based on qt4.
-# these use flags (modules/plugins) require that qt4 gui has to be present at the system to be properly used:
-# cairo gnome gstreamer gtk2 gtk3 opengl pdf sdl v4l
+# these use flags (modules/plugins) require this qt4 gui to be present at the system to work properly:
+# cairo gnome gstreamer gtk2 gtk3 imageimlib imageio opengl pdf sdl v4l
 
 REQUIRED_USE="cairo? ( qt4 x11 )
 	gnome? ( qt4 x11 )
 	gstreamer? ( qt4 x11 )
 	gtk2? ( qt4 x11 )
 	gtk3? ( qt4 x11 )
+	imageimlib ( qt4 x11 )
+	imageio ( qt4 x11 )
 	net? ( curl
 		pop3? ( mime ) )
 	opengl? ( qt4 x11 )
