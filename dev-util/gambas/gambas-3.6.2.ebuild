@@ -16,7 +16,7 @@ LICENSE="GPL2"
 KEYWORDS="*"
 
 IUSE="+curl +net +qt4 +x11
-	bzip2 cairo crypt dbus examples gmp gnome gsl gstreamer gtk2 gtk3 httpd imageimlib imageio jit libxml mime
+	bzip2 cairo crypt dbus examples gmp gnome gsl gstreamer gtk2 gtk3 httpd image-imlib image-io jit libxml mime
 	mysql ncurses odbc openal opengl openssl pcre pdf pop3 postgres qt4 sdl sdl-sound sqlite v4l xml zlib"
 
 # gambas3 have the only one gui. it is based on qt4.
@@ -28,8 +28,8 @@ REQUIRED_USE="cairo? ( qt4 x11 )
 	gstreamer? ( qt4 x11 )
 	gtk2? ( qt4 x11 )
 	gtk3? ( qt4 x11 )
-	imageimlib ( qt4 x11 )
-	imageio ( qt4 x11 )
+	image-imlib ( qt4 x11 )
+	image-io ( qt4 x11 )
 	net? ( curl
 		pop3? ( mime ) )
 	opengl? ( qt4 x11 )
@@ -51,8 +51,8 @@ RDEPEND="bzip2? ( app-arch/bzip2 )
 	gtk2? ( x11-libs/gtk+:2 )
 	gtk3? ( x11-libs/gtk+:3 )
 	jit? ( sys-devel/llvm )
-	imageimlib? ( media-libs/imlib2 )
-	imageio? ( dev-libs/glib
+	image-imlib? ( media-libs/imlib2 )
+	image-io? ( dev-libs/glib
 		x11-libs/gdk-pixbuf )
 	libxml? ( dev-libs/libxml2 )
 	mime? ( dev-libs/gmime )
@@ -112,8 +112,8 @@ src_prepare() {
 	use_if_iuse gtk2 || autocrap_cleanup gtk
 	use_if_iuse gtk3 || autocrap_cleanup gtk3
 	use_if_iuse httpd || autocrap_cleanup httpd
-	use_if_iuse imageimlib || autocrap_cleanup imageimlib
-	use_if_iuse imageio || autocrap_cleanup imageio
+	use_if_iuse image-imlib || autocrap_cleanup imageimlib
+	use_if_iuse image-io || autocrap_cleanup imageio
 	use_if_iuse jit || autocrap_cleanup jit
 	use_if_iuse libxml || autocrap_cleanup libxml
 	use_if_iuse mime || autocrap_cleanup mime
@@ -153,8 +153,8 @@ src_configure() {
 		$(use_enable gtk2) \
 		$(use_enable gtk3) \
 		$(use_enable httpd) \
-		$(use_enable imageimlib) \
-		$(use_enable imageio) \
+		$(use_enable image-imlib imageimlib) \
+		$(use_enable image-io imageio) \
 		$(use_enable jit) \
 		$(use_enable libxml) \
 		$(use_enable mime) \
