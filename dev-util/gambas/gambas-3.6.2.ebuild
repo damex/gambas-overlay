@@ -61,7 +61,7 @@ RDEPEND="bzip2? ( app-arch/bzip2 )
 		dev-qt/qtsvg:4 )
 	sdl? ( media-libs/sdl-image )
 	sdl-sound? ( media-libs/sdl-mixer )
-	v4l? ( media-libs/jpeg
+	v4l? ( virtual/jpeg
 		media-libs/libpng )
 	x11? ( x11-libs/libX11
 		x11-libs/libXtst )
