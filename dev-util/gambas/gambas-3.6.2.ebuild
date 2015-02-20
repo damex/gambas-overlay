@@ -12,7 +12,7 @@ HOMEPAGE="http://gambas.sourceforge.net"
 
 SRC_URI="mirror://sourceforge/${PN}/${MY_PN}-${PV}.tar.bz2"
 
-LICENSE="GPL2"
+LICENSE="GPL-2"
 KEYWORDS="*"
 
 IUSE="+curl +net +qt4 +x11
