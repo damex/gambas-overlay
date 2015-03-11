@@ -1,3 +1,5 @@
+[![Build Status](https://api.travis-ci.org/damex/funtoo-gambas.svg)](https://travis-ci.org/damex/funtoo-gambas)
+
 funtoo-gambas
 ===============
  
