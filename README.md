@@ -1,5 +1,8 @@
+<<<<<<< HEAD
 [![Build Status](https://travis-ci.org/damex/funtoo-gambas.svg?branch=master)](https://travis-ci.org/damex/funtoo-gambas)
 
+=======
+>>>>>>> parent of 4f843a4... travis build status
 funtoo-gambas
 ===============
  
