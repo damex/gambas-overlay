@@ -17,7 +17,7 @@ KEYWORDS="*"
 
 IUSE="+curl +net +qt4 +x11
 	bzip2 cairo crypt dbus examples gmp gnome gsl gstreamer gtk2 gtk3 httpd image-imlib image-io jit libxml mime
-	mysql ncurses odbc openal opengl openssl pcre pdf pop3 postgres qt4 sdl sdl-sound sdl2 sqlite v4l xml zlib"
+	mysql ncurses odbc openal opengl openssl pcre pdf pop3 postgres qt4-opengl qt4-webkit sdl sdl-sound sdl2 sqlite v4l xml zlib"
 
 # gambas3 have the only one gui. it is based on qt4.
 # these use flags (modules/plugins) require this qt4 gui to be present at the system to work properly:
@@ -35,6 +35,8 @@ REQUIRED_USE="cairo? ( qt4 x11 )
 	opengl? ( qt4 x11 )
 	pdf? ( qt4 x11 )
 	qt4? ( x11 )
+	qt4-opengl? ( qt4 )
+	qt4-webkit? ( qt4 )
 	sdl? ( qt4 x11 )
 	sdl-sound? ( sdl )
 	sdl2? ( qt4 x11 )
@@ -66,12 +68,12 @@ RDEPEND="bzip2? ( app-arch/bzip2 )
 	pcre? ( dev-libs/libpcre )
 	pdf? ( virtual/poppler )
 	postgres? ( virtual/postgresql-base )
-	qt4? ( opengl? ( dev-qt/qtopengl:4[qt3support] )
-		dev-qt/qtcore:4[qt3support]
+	qt4? ( dev-qt/qtcore:4[qt3support]
 		dev-qt/qtgui:4[qt3support]
-		dev-qt/qtsvg:4
-		dev-qt/qtwebkit:4 )
-	sdl? ( media-libs/libsdl[opengl] )
+		dev-qt/qtsvg:4 )
+	qt4-opengl? ( dev-qt/qtwebkit:4 )
+	qt4-webkit? ( dev-qt/qtopengl:4[qt3support] )
+	sdl? ( media-libs/libsdl[opengl]
 		media-libs/sdl-image
 		media-libs/sdl-ttf )
 	sdl-sound? ( media-libs/sdl-mixer )
@@ -135,8 +137,9 @@ src_prepare() {
 	use_if_iuse pdf || autocrap_cleanup pdf
 	use_if_iuse postgres || autocrap_cleanup postgresql
 	use_if_iuse qt4 || autocrap_cleanup qt4
-	use_if_iuse sdl || autocrap_cleanup sdl2
+	use_if_iuse sdl || autocrap_cleanup sdl
 	use_if_iuse sdl-sound || autocrap_cleanup sdlsound
+	use_if_iuse sdl2 || autocrap_cleanup sdl2
 	use_if_iuse sqlite || autocrap_cleanup sqlite
 	use_if_iuse v4l || autocrap_cleanup v4l
 	use_if_iuse x11 || autocrap_cleanup x11
@@ -147,7 +150,11 @@ src_prepare() {
 }
 
 src_configure() {
-	econf $(use_enable bzip2 bzlib2) \
+	use_if_iuse qt4 && cd ${S}/gb.qt4 && \
+		econf $(use_enable qt4-opengl qtopengl) \
+			$(use_enable qt4-webkit qtwebkit)
+
+	cd ${S} && econf $(use_enable bzip2 bzlib2) \
 		$(use_enable cairo) \
 		$(use_enable crypt) \
 		$(use_enable curl) \
