@@ -128,7 +128,7 @@ src_prepare() {
 	use_if_iuse pdf || autocrap_cleanup pdf
 	use_if_iuse postgres || autocrap_cleanup postgresql
 	use_if_iuse qt4 || autocrap_cleanup qt4
-	use_if_iuse sdl || autocrap_cleanup sdl
+	use_if_iuse sdl || autocrap_cleanup sdl2
 	use_if_iuse sdl-sound || autocrap_cleanup sdlsound
 	use_if_iuse sqlite || autocrap_cleanup sqlite
 	use_if_iuse v4l || autocrap_cleanup v4l
