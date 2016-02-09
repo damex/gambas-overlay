@@ -101,9 +101,9 @@ autocrap_cleanup() {
 }
 
 src_prepare() {
-	# funtoo-ism
-	epatch "${FILESDIR}/${PN}-3.7.x-app-makefile.am.patch"
-	epatch "${FILESDIR}/${PN}-3.7.x-main-makefile.am.patch"
+	# gentoo-ism
+	epatch "${FILESDIR}/${PN}-3.8.x-app-makefile.am.patch"
+	epatch "${FILESDIR}/${PN}-3.8.x-main-makefile.am.patch"
 
 	# deprecated
 	autocrap_cleanup sqlite2

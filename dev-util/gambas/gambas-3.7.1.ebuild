@@ -101,7 +101,7 @@ autocrap_cleanup() {
 }
 
 src_prepare() {
-	# funtoo-ism
+	# gentoo-ism
 	epatch "${FILESDIR}/${PN}-3.7.x-app-makefile.am.patch"
 	epatch "${FILESDIR}/${PN}-3.7.x-main-makefile.am.patch"
 
